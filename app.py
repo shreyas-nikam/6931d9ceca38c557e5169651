@@ -11,7 +11,7 @@ initialize_session_state()
 # Sidebar for navigation and reset
 st.sidebar.image("https://www.quantuniversity.com/assets/img/logo5.jpg")
 st.sidebar.divider()
-st.title("QuLab")
+st.title("QuLab: QuantFinance AI Model Risk Manager")
 st.divider()
 
 st.sidebar.markdown("### Navigation")
@@ -57,17 +57,6 @@ if st.session_state.navigation_selectbox != current_step_name:
 
 st.sidebar.divider()
 
-
-# Main application content
-st.header("QuantFinance AI Model Risk Manager")
-st.markdown("""
-    In this lab, you will step into the role of **Sarah, a Senior Risk Manager at QuantFinance Bank**. Your mission is to establish a robust framework for managing the unique risks introduced by AI models in the financial sector. The application will guide you through a realistic, story-driven workflow, mirroring the challenges and decisions faced in a dynamic AI environment.
-
-    You will actively engage with the core principles of AI model risk management, from setting up a centralized risk register and defining a comprehensive risk taxonomy, to formally registering new AI models, identifying and quantifying risks, designing mitigation strategies, and adapting to real-time operational feedback.
-
-    This interactive experience is designed to help you not just understand, but *apply* these concepts to real-world tasks, ensuring the trustworthiness, safety, and regulatory compliance of QuantFinance Bank's AI initiatives.
-""")
-st.divider()
 
 # Dynamically import and run the selected page's main function
 current_page_file = page_options[selected_page_label]
