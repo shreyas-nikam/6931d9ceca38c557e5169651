@@ -1,5 +1,6 @@
 import streamlit as st
-from utils import initialize_session_state, restart_workflow # Import the utility functions
+# Import the utility functions
+from utils import initialize_session_state, restart_workflow
 
 # Set basic page configuration
 st.set_page_config(page_title="QuLab", layout="wide")
@@ -36,11 +37,12 @@ page_options = {
 }
 
 # Get current step from session_state to pre-select the page
-current_step_name = list(page_options.keys())[st.session_state.current_step - 1]
+current_step_name = list(page_options.keys())[
+    st.session_state.current_step - 1]
 
 selected_page_label = st.sidebar.selectbox(
-    label="Go to Step:", 
-    options=list(page_options.keys()), 
+    label="Go to Step:",
+    options=list(page_options.keys()),
     index=list(page_options.keys()).index(current_step_name),
     key="navigation_selectbox"
 )
@@ -48,17 +50,16 @@ selected_page_label = st.sidebar.selectbox(
 # Handle page navigation
 if st.session_state.navigation_selectbox != current_step_name:
     # If user manually selects a page from the sidebar, update current_step
-    new_step_index = list(page_options.keys()).index(st.session_state.navigation_selectbox)
+    new_step_index = list(page_options.keys()).index(
+        st.session_state.navigation_selectbox)
     st.session_state.current_step = new_step_index + 1
     st.rerun()
 
 st.sidebar.divider()
-if st.sidebar.button("Restart Workflow", key="sidebar_reset_btn"):
-    restart_workflow()
 
 
 # Main application content
-st.header("QuantFinance AI Model Risk Manager: Sarah's Workflow")
+st.header("QuantFinance AI Model Risk Manager")
 st.markdown("""
     In this lab, you will step into the role of **Sarah, a Senior Risk Manager at QuantFinance Bank**. Your mission is to establish a robust framework for managing the unique risks introduced by AI models in the financial sector. The application will guide you through a realistic, story-driven workflow, mirroring the challenges and decisions faced in a dynamic AI environment.
 

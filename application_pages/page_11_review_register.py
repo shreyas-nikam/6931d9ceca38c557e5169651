@@ -2,6 +2,7 @@ import streamlit as st
 from utils import get_full_risk_register_st
 import pandas as pd
 
+
 def main():
     st.subheader("11. Reviewing the Comprehensive AI Model Risk Register")
     st.markdown("""
@@ -12,16 +13,14 @@ def main():
 
     if st.button("Generate Comprehensive AI Model Risk Register", key="generate_full_register_btn"):
         get_full_risk_register_st()
-        st.session_state.current_step = 12
         st.rerun()
-    
+
     if 'full_risk_register_df' in st.session_state and not st.session_state.full_risk_register_df.empty:
         st.markdown("\n**Comprehensive AI Model Risk Register:**")
         st.dataframe(st.session_state.full_risk_register_df)
+        st.success(
+            "✅ Comprehensive risk register generated! Proceed to Analyze Top Risks.")
+        st.session_state.current_step = 7
     else:
-        st.warning("The full risk register has not been generated yet. Click the button above.")
-    
-    if 'full_risk_register_df' in st.session_state and not st.session_state.full_risk_register_df.empty: # Show next button only if register is generated
-        if st.button("Proceed to Analyze Top Risks", key="next_step11_btn"):
-            st.session_state.current_step = 12
-            st.rerun()
+        st.warning(
+            "The full risk register has not been generated yet. Click the button above.")

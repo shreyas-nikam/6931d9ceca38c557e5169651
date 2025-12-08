@@ -2,6 +2,7 @@ import streamlit as st
 from utils import add_ai_control_st
 import pandas as pd
 
+
 def main():
     st.subheader("9. Defining Controls and Mitigation Strategies")
     st.markdown("""
@@ -11,9 +12,15 @@ def main():
     """)
 
     # Identify relevant risk IDs for controls
-    algorithmic_bias_risk_id = st.session_state.ai_risks_df[st.session_state.ai_risks_df['hazard_description'].str.contains('Algorithmic Bias', na=False)]['risk_id'].iloc[0] if not st.session_state.ai_risks_df[st.session_state.ai_risks_df['hazard_description'].str.contains('Algorithmic Bias', na=False)].empty else None
-    adversarial_attack_risk_id = st.session_state.ai_risks_df[st.session_state.ai_risks_df['hazard_description'].str.contains('Adversarial Attack', na=False)]['risk_id'].iloc[0] if not st.session_state.ai_risks_df[st.session_state.ai_risks_df['hazard_description'].str.contains('Adversarial Attack', na=False)].empty else None
-    data_provenance_risk_id = st.session_state.ai_risks_df[st.session_state.ai_risks_df['hazard_description'].str.contains('Data Provenance', na=False)]['risk_id'].iloc[0] if not st.session_state.ai_risks_df[st.session_state.ai_risks_df['hazard_description'].str.contains('Data Provenance', na=False)].empty else None
+    # Algorithmic Bias is stored in risk_type
+    algorithmic_bias_risk_id = st.session_state.ai_risks_df[st.session_state.ai_risks_df['risk_type'].str.contains(
+        'Algorithmic Bias', na=False)]['risk_id'].iloc[0] if not st.session_state.ai_risks_df[st.session_state.ai_risks_df['risk_type'].str.contains('Algorithmic Bias', na=False)].empty else None
+    # Adversarial Attack is stored in hazard_description (risk_type is "Model Risk")
+    adversarial_attack_risk_id = st.session_state.ai_risks_df[st.session_state.ai_risks_df['hazard_description'].str.contains(
+        'Adversarial Attack', na=False, case=False)]['risk_id'].iloc[0] if not st.session_state.ai_risks_df[st.session_state.ai_risks_df['hazard_description'].str.contains('Adversarial Attack', na=False, case=False)].empty else None
+    # Data Provenance is stored in hazard_description (risk_type is "Data Risk") - search for "provenance" in lowercase
+    data_provenance_risk_id = st.session_state.ai_risks_df[st.session_state.ai_risks_df['hazard_description'].str.contains(
+        'provenance', na=False, case=False)]['risk_id'].iloc[0] if not st.session_state.ai_risks_df[st.session_state.ai_risks_df['hazard_description'].str.contains('provenance', na=False, case=False)].empty else None
 
     # Helper to check if a control for a given risk_id and description exists
     def control_exists(risk_id, control_desc_part):
@@ -21,7 +28,8 @@ def main():
             return False
         return not st.session_state.ai_controls_df[
             (st.session_state.ai_controls_df['risk_id'] == risk_id) &
-            (st.session_state.ai_controls_df['control_description'].str.contains(control_desc_part, na=False))
+            (st.session_state.ai_controls_df['control_description'].str.contains(
+                control_desc_part, na=False))
         ].empty
 
     st.markdown("Sarah, define controls for the following identified risks:")
@@ -38,9 +46,11 @@ def main():
                 st.rerun()
             all_controls_added = False
         else:
-            st.info(f"Control for Algorithmic Bias (Risk ID: {int(algorithmic_bias_risk_id)}) already defined.")
+            st.info(
+                f"Control for Algorithmic Bias (Risk ID: {int(algorithmic_bias_risk_id)}) defined below.")
     else:
-        st.warning("Algorithmic Bias risk not found. Please ensure it was added in previous steps.")
+        st.warning(
+            "Algorithmic Bias risk not found. Please ensure it was added in previous steps.")
 
     if adversarial_attack_risk_id:
         if not control_exists(adversarial_attack_risk_id, "adversarial training techniques"):
@@ -52,9 +62,11 @@ def main():
                 st.rerun()
             all_controls_added = False
         else:
-            st.info(f"Control for Adversarial Attack (Risk ID: {int(adversarial_attack_risk_id)}) already defined.")
+            st.info(
+                f"Control for Adversarial Attack (Risk ID: {int(adversarial_attack_risk_id)}) defined below.")
     else:
-        st.warning("Adversarial Attack risk not found. Please ensure it was added in previous steps.")
+        st.warning(
+            "Adversarial Attack risk not found. Please ensure it was added in previous steps.")
 
     if data_provenance_risk_id:
         if not control_exists(data_provenance_risk_id, "data lineage tracking"):
@@ -66,14 +78,16 @@ def main():
                 st.rerun()
             all_controls_added = False
         else:
-            st.info(f"Control for Data Provenance (Risk ID: {int(data_provenance_risk_id)}) already defined.")
+            st.info(
+                f"Control for Data Provenance (Risk ID: {int(data_provenance_risk_id)}) defined below.")
     else:
-        st.warning("Data Provenance risk not found. Please ensure it was added in previous steps.")
+        st.warning(
+            "Data Provenance risk not found. Please ensure it was added in previous steps.")
 
     st.markdown("\n**Updated AI Controls Register:**")
     st.dataframe(st.session_state.ai_controls_df)
 
-    if all_controls_added: # Only show 'Proceed' button if all specific controls were added or existed
-        if st.button("Proceed to Assign Risk Response Options", key="next_step9_btn"):
-            st.session_state.current_step = 10
-            st.rerun()
+    if all_controls_added:  # Only show 'Proceed' button if all specific controls were added or existed
+        st.success(
+            "✅ Controls defined! Proceed to Assign Risk Response Options.")
+        st.session_state.current_step = 6

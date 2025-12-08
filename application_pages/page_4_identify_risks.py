@@ -2,8 +2,10 @@ import streamlit as st
 from utils import add_ai_risk_st
 import pandas as pd
 
+
 def main():
-    st.subheader("4. Initial Risk Identification: Potential Hazards for the Credit Score Model")
+    st.subheader(
+        "4. Initial Risk Identification: Potential Hazards for the Credit Score Model")
     st.markdown("""
         With the Credit Score Predictor registered, Sarah begins the crucial process of identifying potential AI-specific hazards. She draws upon her expertise and the bank's risk taxonomy to foresee issues that could arise from data quality, model behavior, or operational deployment. This proactive identification is key to mitigating future problems and aligns with Section 4.2 of the AI RMF, focusing on "Risk Register: Identification and Categorization."
 
@@ -14,47 +16,65 @@ def main():
     if 'credit_score_predictor_model_id' in st.session_state:
         credit_score_predictor_model_id = st.session_state.credit_score_predictor_model_id
     elif 'Credit Score Predictor' in st.session_state.ai_models_df['model_name'].values:
-        credit_score_predictor_model_id = st.session_state.ai_models_df[st.session_state.ai_models_df['model_name'] == 'Credit Score Predictor']['model_id'].iloc[0]
-
+        credit_score_predictor_model_id = st.session_state.ai_models_df[
+            st.session_state.ai_models_df['model_name'] == 'Credit Score Predictor']['model_id'].iloc[0]
 
     if credit_score_predictor_model_id:
-        st.write(f"Adding risks for model: **Credit Score Predictor** (ID: {int(credit_score_predictor_model_id)})")
-        
+        st.write(
+            f"Adding risks for model: **Credit Score Predictor** (ID: {int(credit_score_predictor_model_id)})")
+
         # Define the risks to add
         risks_to_add = [
-            {"type": "Data Quality", "description": "Poor or incomplete historical data leading to inaccurate credit scores."},
-            {"type": "Algorithmic Bias", "description": "Model exhibits biased decision-making against certain demographic groups."},
-            {"type": "Performance Degradation", "description": "Model accuracy degrades over time due to changes in credit behavior patterns."}
+            {"type": "Data Quality",
+                "description": "Poor or incomplete historical data leading to inaccurate credit scores."},
+            {"type": "Algorithmic Bias",
+                "description": "Model exhibits biased decision-making against certain demographic groups."},
+            {"type": "Performance Degradation",
+                "description": "Model accuracy degrades over time due to changes in credit behavior patterns."}
         ]
+
+        # Check if risks are already added to avoid duplicates in the UI
+        current_risks = st.session_state.ai_risks_df[st.session_state.ai_risks_df['model_id']
+                                                     == credit_score_predictor_model_id]['hazard_description'].tolist()
 
         # Use a form to add risks to ensure only one action per rerun if multiple buttons are clicked
         with st.form("initial_risk_identification_form"):
-            st.markdown("Sarah, select the risks to add to the register for the Credit Score Predictor.")
-            
-            # Check if risks are already added to avoid duplicates in the UI
-            current_risks = st.session_state.ai_risks_df[st.session_state.ai_risks_df['model_id'] == credit_score_predictor_model_id]['hazard_description'].tolist()
-            
+            st.markdown(
+                "Sarah, select the risks to add to the register for the Credit Score Predictor.")
+
+            selected_risks = []
             for i, risk in enumerate(risks_to_add):
                 if risk['description'] not in current_risks:
-                    if st.checkbox(f"Add **{risk['type']}**: {risk['description']}", key=f"add_risk_checkbox_{i}"):
-                        add_ai_risk_st(credit_score_predictor_model_id, risk['type'], risk['description'])
+                    if st.checkbox(f"Add **{risk['type']}**: {risk['description']}", key=f"add_risk_checkbox_{i}", value=True):
+                        selected_risks.append(risk)
                 else:
-                    st.success(f"Risk '{risk['type']}' already added: {risk['description']}")
-            
+                    st.success(
+                        f"Risk '{risk['type']}' already added: {risk['description']}")
+
             submitted_add_risks = st.form_submit_button("Confirm Added Risks")
             if submitted_add_risks:
-                st.success("Risks confirmed.")
-                st.session_state.current_step = 5
+                # Add all selected risks
+                for risk in selected_risks:
+                    add_ai_risk_st(credit_score_predictor_model_id,
+                                   risk['type'], risk['description'])
+                if selected_risks:
+                    st.success(
+                        f"{len(selected_risks)} risk(s) added successfully.")
+                st.session_state.current_step = 4
                 st.rerun()
 
-        st.markdown("\n**Updated AI Risks Register (for Credit Score Predictor):**")
-        st.dataframe(st.session_state.ai_risks_df[st.session_state.ai_risks_df['model_id'] == credit_score_predictor_model_id])
+        st.markdown(
+            "\n**Updated AI Risks Register (for Credit Score Predictor):**")
+        st.dataframe(
+            st.session_state.ai_risks_df[st.session_state.ai_risks_df['model_id'] == credit_score_predictor_model_id])
 
-        if st.button("Proceed to Quantify Risks", key="next_step4_btn"):
-            st.session_state.current_step = 5
-            st.rerun()
+        # Only show success message if all risks have been added
+        if all(risk['description'] in current_risks for risk in risks_to_add):
+            st.success("✅ All risks identified! Proceed to Quantify Risks.")
+            st.session_state.current_step = 4
     else:
-        st.error("Credit Score Predictor model not found. Please go back to Step 3 to register it.")
+        st.error(
+            "Credit Score Predictor model not found. Please go back to Step 3 to register it.")
         if st.button("Go to Step 3", key="go_to_step3_from4"):
             st.session_state.current_step = 3
             st.rerun()
