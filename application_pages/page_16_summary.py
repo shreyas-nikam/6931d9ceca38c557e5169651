@@ -11,6 +11,19 @@ def main():
         This continuous feedback loop ensures that the bank's AI models remain trustworthy and perform reliably in evolving environments.
     """)
 
+    # Check if system is initialized
+    if not st.session_state.get('system_initialized', False):
+        st.warning("⚠️ The AI Risk Management System has not been initialized yet. Please go to Step 1 to initialize the system before viewing the summary.")
+        st.session_state.current_step = 1
+        return
+
+    # Check if required data exists
+    if 'ai_risks_df' not in st.session_state or st.session_state.ai_risks_df.empty:
+        st.warning(
+            "⚠️ No risks have been identified yet. Please complete the workflow starting from Step 1 to generate the risk register.")
+        st.session_state.current_step = 1
+        return
+
     st.markdown("### Final Comprehensive AI Model Risk Register")
     if 'full_risk_register_df' not in st.session_state or st.session_state.full_risk_register_df.empty:
         get_full_risk_register_st()
