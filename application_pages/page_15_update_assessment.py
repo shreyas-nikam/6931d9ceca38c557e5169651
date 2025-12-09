@@ -67,6 +67,3 @@ def main():
 
     else:
         st.error("Credit Score Predictor model not found. Cannot update risk assessment. Please ensure it is registered in Step 3.")
-        if st.button("Go to Step 3", key="go_to_step3_from15"):
-            st.session_state.current_step = 3
-            st.rerun()

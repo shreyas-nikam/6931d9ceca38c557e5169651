@@ -57,9 +57,6 @@ def main():
     else:
         st.error(
             "Credit Score Predictor model not found. Please ensure it's registered in Step 3.")
-        if st.button("Go to Step 3", key="go_to_step3_from7"):
-            st.session_state.current_step = 3
-            st.rerun()
 
     st.markdown("\n**Updated AI Risks Register with adversarial attack risk:**")
     st.dataframe(st.session_state.ai_risks_df)

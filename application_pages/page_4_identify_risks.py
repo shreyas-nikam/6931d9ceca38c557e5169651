@@ -75,6 +75,3 @@ def main():
     else:
         st.error(
             "Credit Score Predictor model not found. Please go back to Step 3 to register it.")
-        if st.button("Go to Step 3", key="go_to_step3_from4"):
-            st.session_state.current_step = 3
-            st.rerun()

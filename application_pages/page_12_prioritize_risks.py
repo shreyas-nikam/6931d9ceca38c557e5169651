@@ -14,9 +14,6 @@ def main():
     if 'full_risk_register_df' not in st.session_state or st.session_state.full_risk_register_df.empty:
         st.warning(
             "Please generate the comprehensive risk register in Step 11 first to identify top risks.")
-        if st.button("Go to Step 11", key="go_to_step11_from12"):
-            st.session_state.current_step = 11
-            st.rerun()
         return
 
     num_top_risks = st.number_input(
