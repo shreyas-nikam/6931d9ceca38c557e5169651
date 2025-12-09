@@ -69,11 +69,16 @@ def main():
                         model_name=fraud_detection_model_name, model_use_case="Detecting fraudulent financial transactions in real-time", model_description="Supervised learning model trained on historical transaction data to flag suspicious activities.", model_owner="Fraud Prevention Unit", model_status="In Production",
                         risk_type="Data Risk", hazard_description=dp_hazard_description, likelihood=dp_likelihood, magnitude=dp_magnitude
                     )
-                    st.success(
-                        "✅ Data Provenance Risk added successfully! Refer to the updated AI Risk Register below.")
+                    st.session_state.show_dp_success = True
                     st.rerun()
         else:
             st.info("Data Provenance Risk already added.")
+        
+        # Display success message after rerun
+        if st.session_state.get('show_dp_success', False):
+            st.success(
+                "✅ Data Provenance Risk added successfully! Refer to the updated AI Risk Register below.")
+            st.session_state.show_dp_success = False
 
         if not third_party_risk_exists:
             st.markdown(
@@ -93,11 +98,16 @@ def main():
                         model_name=fraud_detection_model_name, model_use_case="Detecting fraudulent financial transactions in real-time", model_description="Supervised learning model trained on historical transaction data to flag suspicious activities.", model_owner="Fraud Prevention Unit", model_status="In Production",
                         risk_type="Organizational Risk", hazard_description=tpd_hazard_description, likelihood=tpd_likelihood, magnitude=tpd_magnitude
                     )
-                    st.success(
-                        "✅ Third-Party Dependency Risk added successfully! Refer to the updated AI Risk Register below.")
+                    st.session_state.show_tpd_success = True
                     st.rerun()
         else:
             st.info("Third-Party Dependency Risk already added.")
+        
+        # Display success message after rerun
+        if st.session_state.get('show_tpd_success', False):
+            st.success(
+                "✅ Third-Party Dependency Risk added successfully! Refer to the updated AI Risk Register below.")
+            st.session_state.show_tpd_success = False
 
         # Only allow advancing if both risks are added or acknowledged
         if data_provenance_risk_exists and third_party_risk_exists:

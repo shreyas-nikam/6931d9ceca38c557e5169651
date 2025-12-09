@@ -8,7 +8,43 @@ def main():
 
         A well-defined taxonomy helps Sarah and her team systematically identify potential AI-specific hazards, such as data drift, adversarial attacks, algorithmic bias, or privacy breaches, ensuring comprehensive coverage and facilitating communication across different departments within QuantFinance Bank.
     """)
-    st.json(st.session_state.AI_RISK_TAXONOMY)
+
+    # Display taxonomy in a visually appealing way
+    st.markdown("### 📊 AI Risk Taxonomy Framework")
+
+    # Define colors for each category
+    category_colors = {
+        "Data Risk": "#FF6B6B",
+        "Model Risk": "#4ECDC4",
+        "System Risk": "#FFE66D",
+        "Human Risk": "#A8DADC",
+        "Organizational Risk": "#C77DFF"
+    }
+
+    # Create columns for better layout
+    col1, col2 = st.columns(2)
+
+    taxonomy = st.session_state.AI_RISK_TAXONOMY
+    categories = list(taxonomy.keys())
+
+    # Display first column categories
+    with col1:
+        for category in categories[:3]:
+            with st.container(border=True):
+                st.markdown(f"### 🎯 {category}")
+                risks = taxonomy[category]
+                for risk in risks:
+                    st.markdown(f"• **{risk}**")
+
+    # Display second column categories
+    with col2:
+        for category in categories[3:]:
+            with st.container(border=True):
+                st.markdown(f"### 🎯 {category}")
+                risks = taxonomy[category]
+                for risk in risks:
+                    st.markdown(f"• **{risk}**")
+
     st.info("This taxonomy will serve as a checklist and classification system for Sarah and her team. By having predefined categories like 'Data Risk' and 'Model Risk' with specific types, Sarah ensures no critical area of AI risk is overlooked when assessing new models. This structured approach underpins the systematic identification required for effective risk management.")
 
     st.markdown("---")
